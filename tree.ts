@@ -6,7 +6,7 @@ export interface TreeEntry extends Deno.DirEntry{
     path:string;
 }
 
-const tree = async (root: string) => {
+const tree = async (root: string, prefix="") => {
   const entries: TreeEntry[] = [];
   for await (const entry of Deno.readDir(root)) {
     // readDirでは一階層したのファイルパスだけ
@@ -21,10 +21,12 @@ const tree = async (root: string) => {
   );
 
   for await (const entry of sortedEntries) {
-    console.log(entry.path)
+    // console.log(prefix + entry.path)
+    console.log(prefix + entry.name)  // フルパスではなく、ファイル名だけ表示
     // entryがディレクトリだったら再帰的にtree呼び出し
     if (entry.isDirectory && entry.name !== ".git"){ // ignore .git directory
-      await tree(entry.path)
+      // await tree(entry.path)
+      await tree(entry.path, prefix+"  ")  // 再帰的処理をするときに、prefixのスペースが増えていく
     }
   }
 };
