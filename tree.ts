@@ -22,6 +22,10 @@ const tree = async (root: string) => {
 
   for await (const entry of sortedEntries) {
     console.log(entry.path)
+    // entryがディレクトリだったら再帰的にtree呼び出し
+    if (entry.isDirectory && entry.name !== ".git"){ // ignore .git directory
+      await tree(entry.path)
+    }
   }
 };
 
